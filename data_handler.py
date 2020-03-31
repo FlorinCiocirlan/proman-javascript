@@ -1,14 +1,14 @@
-import persistence
+import queries
 
 
-def get_card_status(status_id):
+def get_card_status():
     """
     Find the first status matching the given id
     :param status_id:
     :return: str
     """
-    statuses = persistence.get_statuses()
-    return next((status['title'] for status in statuses if status['id'] == str(status_id)), 'Unknown')
+    statuses = queries.get_status()
+    return statuses
 
 
 def get_boards():
