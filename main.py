@@ -12,6 +12,7 @@ def index():
     """
     This is a one-pager which shows all the boards and cards
     """
+
     return render_template('index.html')
 
 
@@ -21,7 +22,7 @@ def get_boards():
     """
     All the boards
     """
-    return data_handler.get_card_status()
+    return queries.get_boards()
 
 
 @app.route("/get-cards/<int:board_id>")

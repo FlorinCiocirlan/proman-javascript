@@ -13,7 +13,7 @@
 
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-        <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+        <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
     </head>
     <body>
     {% extends 'layout.html' %}
@@ -28,7 +28,19 @@
         </div>
 
     </div>
+        <h1 id="boardTitle" contenteditable="true">HEo</h1>
+<script>
+    document.getElementById('boardTitle').addEventListener('click', editTitle)
 
+    function editTitle(event){
+        console.log(event)
+        const titleOld = event.target.innerText
+        console.log(titleOld)
+        window.localStorage.setItem('ID', titleOld)
+        }
+
+
+</script>
 
     {% endblock %}
 
