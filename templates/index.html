@@ -22,26 +22,15 @@
 
 
     <div class="container">
-        <div class="row1 row d-flex">
-            <div class="d-flex v-auto ml-auto">
+        <div class="d-flex pr-3 mt-2">
+            <div class="d-flex ml-auto mt-10">
                 <button type="button" id="addNewBoard" class="btn btn-outline-dark">+ New Board</button>
             </div>
         </div>
 
     </div>
-        <h1 id="boardTitle" contenteditable="true">HEo</h1>
-<script>
-    document.getElementById('boardTitle').addEventListener('click', editTitle)
-
-    function editTitle(event){
-        console.log(event)
-        const titleOld = event.target.innerText
-        console.log(titleOld)
-        window.localStorage.setItem('ID', titleOld)
-        }
 
 
-</script>
 
     {% endblock %}
 

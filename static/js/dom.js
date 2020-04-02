@@ -14,26 +14,23 @@ export let dom = {
 
         for (let board of boards) {
             boardList.push( `
-        <div class="d-flex m-3 ">
-            <section style="width: 100%" class="d-flex flex-row">
-                <div class="bg-info p-2 border rounded flex-grow-1">
-                    <span class="">${board.title}</span>
-                </div>
-                <button class="btn btn-dark ml-auto" id="buttonNewCardForBoard${board.id}">Add Column</button>            
-            </section>
+        <div class="row d-flex">
+            <div class="col-2">
+                <h4 id="nameBoard" contenteditable="true">${board.title}</h4>
+            </div>
+            <div class="col-sm">
+                <button id="addColumn" class="btn btn-outline-dark" type="button">+ New Column</button>
+            </div>
+            <div class="dropdown d-flex v-auto ml-auto">
+                <button class="btn btn-outline-dark dropdown-toggle" type="button"></button>
+            </div>
         </div>
-            `);
+        `);
         }
 
-        const outerHtml = `
-            <ul class="board-container">
-                ${boardList}
-            </ul>
-        `;
 
         let boardsContainer;
         for (let everyboard of boardList){
-            boardsContainer = document.querySelector('.container');
             boardsContainer = document.querySelector('.container');
             boardsContainer.insertAdjacentHTML("beforeend", everyboard);
         }
