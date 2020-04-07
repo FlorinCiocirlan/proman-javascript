@@ -13,10 +13,10 @@ export let dom = {
         })
     },
     showBoards: function (boards) {
-        let boardList = [];
+        let boardList = ``;
 
         for (let board of boards) {
-            boardList.push(
+            boardList +=
         `<div class="row d-flex">
             <div class="col-2">
                 <h4 id="nameBoard" contenteditable="true">${board.title}</h4>
@@ -28,7 +28,7 @@ export let dom = {
                 <button id="dropdown" class="btn btn-outline-dark dropdown-toggle" type="button"></button>
             </div>
         </div>`
-        );
+        ;
         }
 
 

@@ -1,7 +1,6 @@
 //*****************Show all boards *************
 
 function displayBoards(boards){
-    console.table(boards)
     for(board of boards){
         const divBoard = document.createElement('div')
         divBoard.classList.add('bigDiv' + `${board.id}`)
@@ -38,13 +37,11 @@ function displayBoards(boards){
         divRow.appendChild(divCol3);
 
         const buttonDropDown = document.createElement('button');
-        buttonDropDown.classList.add('btn', 'btn-outline-dark', 'dropdown-toggle');
-        buttonDropDown.setAttribute('id', 'dropDown');
+        buttonDropDown.classList.add('btn', 'btn-outline-dark');
         buttonDropDown.setAttribute('type', 'button');
-        buttonDropDown.setAttribute('data-toggle','collapse')
-        buttonDropDown.setAttribute('data-target', '#collapseBoard' + `${board.id}`)
-        buttonDropDown.setAttribute('onclick', "getStatuses(" + `${board.id}` + ")");
+        buttonDropDown.setAttribute('onclick',"showStatuses("+`${board.id}`+")");
         divCol3.appendChild(buttonDropDown);
+        getStatuses(board.id)
 
     }
 
@@ -63,14 +60,22 @@ getAllBoards()
 
 
 //*************** Drop Down *************
-function displayStatuses(statuses, boardId){
+function createStatuses(statuses, boardId){
     content = document.querySelector('.bigDiv' + boardId)
 
-    divStatus = document.createElement('div');
-    divStatus.classList.add('collapse', 'bordContent');
-    divStatus.setAttribute('id', 'collapseBoard' + boardId)
-    divStatus.textContent = 'buan ziua'
-    content.append(divStatus)
+    // divStatus = document.createElement('div');
+    // divStatus.classList.add('collapse', 'bordContent');
+    // divStatus.setAttribute('id', 'collapseBoard' + boardId)
+    // divStatus.textContent = 'buan ziua'
+    // content.append(divStatus)
+    outerHTML = `<div class="container" id="container_${boardId}" style="display: none;"><div class="row" id="collapseBoard_${boardId}"> </div></div>`;
+    content.insertAdjacentHTML('beforeend',outerHTML)
+    statusList = ``
+    for(currentStatus of statuses){
+        column = `<div class="col">${currentStatus.title}</div>`;
+        statusList += column;
+    }
+    document.querySelector('#collapseBoard_'+ boardId).insertAdjacentHTML('beforeend',statusList)
 
 }
 
@@ -81,8 +86,16 @@ function getStatuses(boardId){
             return response.json();
         })
         .then((data) => {
-            console.log(boardId)
-            displayStatuses(data, boardId)
+            createStatuses(data, boardId)
         })
+}
+
+function showStatuses(boardId){
+    let div = document.querySelector('#container_'+boardId);
+    if (div.style.display === 'none'){
+        div.style.display = 'block'
+    } else{
+        div.style.display = 'none';
+    }
 }
 
