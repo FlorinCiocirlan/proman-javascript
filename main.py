@@ -24,15 +24,27 @@ def get_boards():
     """
     return queries.get_boards()
 
+# @app.route('/get-board/<id>')
+# @json_response
+# def get_board(id):
+#
+#     return queries.
 
-@app.route("/get-cards/<int:board_id>")
+
+@app.route("/get-cards/<board_id>")
 @json_response
-def get_cards_for_board(board_id: int):
+def get_cards_for_board(board_id):
     """
     All cards that belongs to a board
     :param board_id: id of the parent board
     """
-    return data_handler.get_cards_for_board(board_id)
+    return queries.get_cards(board_id)
+
+
+@app.route('/get-statuses')
+@json_response
+def get_statuses_for_board():
+    return queries.get_statuses()
 
 
 def main():

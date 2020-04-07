@@ -44,5 +44,18 @@ export let dataHandler = {
         this._api_get('/get-boards', (response) => {
             this._data = response;
             callback(response);
-        });
-    }}
+        })
+    },
+    getStatuses: function (boardId, callback) {
+        this._api_get('/get-statuses/board_id', (response) => {
+            this._data = response;
+            callback(response);
+        })
+    },
+    getCards: function (boardId, callback) {
+        this._api_get('/get-cards/board_id', (response) => {
+            this._data = response;
+            callback(response);
+        })
+    }
+}
