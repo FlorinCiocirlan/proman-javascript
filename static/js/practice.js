@@ -40,8 +40,10 @@ function displayBoards(boards){
         buttonDropDown.classList.add('btn', 'btn-outline-dark');
         buttonDropDown.setAttribute('type', 'button');
         buttonDropDown.setAttribute('onclick',"showStatuses("+`${board.id}`+")");
+        buttonDropDown.textContent = 'v';
         divCol3.appendChild(buttonDropDown);
         getStatuses(board.id)
+        getCards(board.id)
 
     }
 
@@ -59,7 +61,7 @@ function getAllBoards() {
 getAllBoards()
 
 
-//*************** Drop Down *************
+//*************** Drop Down /---/ Statuses *************
 function createStatuses(statuses, boardId){
     content = document.querySelector('.bigDiv' + boardId)
 
@@ -97,5 +99,13 @@ function showStatuses(boardId){
     } else{
         div.style.display = 'none';
     }
+}
+
+
+//*********************** --fetch and display cards-- ************
+
+function getCards(boardId){
+
+
 }
 
