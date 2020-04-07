@@ -3,9 +3,14 @@
 function displayBoards(boards){
     console.table(boards)
     for(board of boards){
+        const divBoard = document.createElement('div')
+        divBoard.classList.add('bigDiv' + `${board.id}`)
+        document.querySelector('.container').appendChild(divBoard);
+
+
         const divRow = document.createElement('div');
         divRow.classList.add(`row_${board.id}`, 'row', 'd-flex');
-        document.querySelector('.container').appendChild(divRow);
+        divBoard.appendChild(divRow);
 
         const divCol1 = document.createElement('div');
         divCol1.classList.add('col-2');
@@ -36,7 +41,9 @@ function displayBoards(boards){
         buttonDropDown.classList.add('btn', 'btn-outline-dark', 'dropdown-toggle');
         buttonDropDown.setAttribute('id', 'dropDown');
         buttonDropDown.setAttribute('type', 'button');
-        buttonDropDown.
+        buttonDropDown.setAttribute('data-toggle','collapse')
+        buttonDropDown.setAttribute('data-target', '#collapseBoard' + `${board.id}`)
+        buttonDropDown.setAttribute('onclick', "getStatuses(" + `${board.id}` + ")");
         divCol3.appendChild(buttonDropDown);
 
     }
@@ -45,7 +52,7 @@ function displayBoards(boards){
 
 function getAllBoards() {
     fetch('/get-boards')
-        .then((response) =>{
+        .then((response) => {
             return response.json();
         })
         .then((data) => {
@@ -56,16 +63,26 @@ getAllBoards()
 
 
 //*************** Drop Down *************
-function displayStatuses(){}
+function displayStatuses(statuses, boardId){
+    content = document.querySelector('.bigDiv' + boardId)
+
+    divStatus = document.createElement('div');
+    divStatus.classList.add('collapse', 'bordContent');
+    divStatus.setAttribute('id', 'collapseBoard' + boardId)
+    divStatus.textContent = 'buan ziua'
+    content.append(divStatus)
+
+}
 
 
-function getStatuses(){
+function getStatuses(boardId){
     fetch('/get-statuses')
         .then ((response)=>{
             return response.json();
         })
         .then((data) => {
-            displayStatus(data)
+            console.log(boardId)
+            displayStatuses(data, boardId)
         })
 }
 

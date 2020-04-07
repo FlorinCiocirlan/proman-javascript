@@ -41,6 +41,7 @@ def get_cards_for_board(board_id):
     return queries.get_cards(board_id)
 
 
+
 @app.route('/get-statuses')
 @json_response
 def get_statuses_for_board():

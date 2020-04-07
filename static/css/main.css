@@ -2,10 +2,18 @@
     padding: 10px;
     border: 1px solid black;
     margin: 20px;
+    margin-bottom: 0;
 }
-.row1 {
-    padding-bottom: 10px;
+
+.bordContent {
+    border: 1px solid black;
+    margin: 20px;
+    margin-top: 0;
+    padding: 10px;
+    padding-top: 0;
+    border-top: 0;
 }
+
 
 
 
