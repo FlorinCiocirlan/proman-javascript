@@ -8,10 +8,10 @@ function displayBoards(boards){
 
     for (board of boards){
     bordTemplate =
-        `<div class="boardDiv_${board.id} mb-5">
-            <div class="boardHeader_${board.id} d-flex border mr-3 p-3 rounded">
+        `<div class="boardDiv_${board.id} mb-5 border">
+            <div class="boardHeader_${board.id} d-flex mr-3 p-3 rounded">
                 <div id="boardTitle_${board.id} " class="mr-auto">
-                    ${board.title}
+                    <h3>${board.title}</h3>
                 </div>
                 <div class="mr-2">
                     <button id="addStatus_${board.id}"  class="btn btn-outline-dark btn-sm " type="button">+ Add Status</button>
@@ -20,7 +20,7 @@ function displayBoards(boards){
                     <button id="expandBoard_${board.id}" class="btn btn-outline-dark btn-sm" type="button">v</button>
                 </div>
             </div>
-            <div class="container" style="display: none" id="container_${board.id}">
+            <div class="container border-top bg-light" style="display: none" id="container_${board.id}">
                 <div class="row" id="statusesContainer_${board.id}">
                     
                 </div>
@@ -47,7 +47,6 @@ function displayBoards(boards){
                 }else{
                     container.style.display = 'none';
                 }
-
                 let expandBody = document.getElementById('statusesContainer_'+`${boardId}`);
                 expandBody.innerHTML = '';
 
@@ -56,7 +55,7 @@ function displayBoards(boards){
                     createAppend(status);
                     let statusResponse = await fetch(`/get-cards/${boardId}/${status.status_id}`);
                     statusResponse = await statusResponse.json();
-                    let statusBody = document.getElementById(`column_tr_${status.status_id}`);
+                    let statusBody = document.getElementById(`column_tr_${status.status_id}_${status.board_id}`);
                     statusBody.innerHTML = '';
                     statusBody.innerText = status.title;
                     for (let card of statusResponse){
@@ -94,27 +93,27 @@ function myFunction() {
 function createAppend(status) {
 
     let boardBody = document.getElementById('statusesContainer_'+`${status.board_id}`)
-    // boardBody.setAttribute('class', 'd-flex', 'border', 'mr-3', 'p-3', 'rounded');
+    boardBody.setAttribute('class', 'd-flex mr-3 p-3 rounded');
     let column = document.createElement('div');
-    column.setAttribute('class', 'col');
+    column.setAttribute('class', 'col m-1 bg-white');
     // let column_tr = document.createElement('p');
     // column.setAttribute('class', 'col-sm');
     // column.setAttribute('style', 'margin:20px; border: 2px solid black; display: block');
     column.setAttribute('style', 'text-align: center')
     // column.setAttribute('style', 'display: table;')
-    column.setAttribute('id', `column_${status.status_id}`);
-    column.setAttribute('id', `column_tr_${status.status_id}`);
+    // column.setAttribute('id', `column_${status.status_id}`);
+    column.setAttribute('id', `column_tr_${status.status_id}_${status.board_id}`);
     column.setAttribute('data-board', status.board_id);
     column.innerText = `${status.title}`;
     boardBody.appendChild(column);}
 
 
 function createAppendCard(status) {
-    let statusBody = document.getElementById(`column_tr_${status.status_id}`);
+    let statusBody = document.getElementById(`column_tr_${status.status_id}_${status.board_id}`);
     if (statusBody) {
     let cardBody = document.createElement('div');
     cardBody.setAttribute('class', 'col-md');
-    cardBody.setAttribute('style', ' border: 2px solid black; margin: 6px;');
+    cardBody.setAttribute('style', ' border: 1px solid black; margin: 3px;');
     cardBody.setAttribute('id', `card_${status.id}`);
     cardBody.setAttribute('data-card', `${statusBody.id}`);
     cardBody.setAttribute('data-board', statusBody.dataset.board);
