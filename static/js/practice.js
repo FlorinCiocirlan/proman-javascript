@@ -95,13 +95,8 @@ function createAppend(status) {
     let boardBody = document.getElementById('statusesContainer_'+`${status.board_id}`)
     boardBody.setAttribute('class', 'd-flex mr-3 p-3 rounded');
     let column = document.createElement('div');
-    column.setAttribute('class', 'col m-1 bg-white');
-    // let column_tr = document.createElement('p');
-    // column.setAttribute('class', 'col-sm');
-    // column.setAttribute('style', 'margin:20px; border: 2px solid black; display: block');
+    column.setAttribute('class', 'col m-1 bg-white listcard');
     column.setAttribute('style', 'text-align: center')
-    // column.setAttribute('style', 'display: table;')
-    // column.setAttribute('id', `column_${status.status_id}`);
     column.setAttribute('id', `column_tr_${status.status_id}_${status.board_id}`);
     column.setAttribute('data-board', status.board_id);
     column.innerText = `${status.title}`;
@@ -112,8 +107,9 @@ function createAppendCard(status) {
     let statusBody = document.getElementById(`column_tr_${status.status_id}_${status.board_id}`);
     if (statusBody) {
     let cardBody = document.createElement('div');
-    cardBody.setAttribute('class', 'col-md');
+    cardBody.setAttribute('class', 'col-md card');
     cardBody.setAttribute('style', ' border: 1px solid black; margin: 3px;');
+    cardBody.setAttribute('draggable', true);
     cardBody.setAttribute('id', `card_${status.id}`);
     cardBody.setAttribute('data-card', `${statusBody.id}`);
     cardBody.setAttribute('data-board', statusBody.dataset.board);
@@ -123,7 +119,51 @@ function createAppendCard(status) {
     }
 }
 
+const list_items = document.querySelectorAll('.card');
+const lists = document.querySelectorAll('.listcard');
 
+let draggedItem = null;
+
+for (let i = 0; i < list_items.length; i++) {
+	const item = list_items[i];
+
+	item.addEventListener('dragstart', function () {
+		draggedItem = item;
+		setTimeout(function () {
+			item.style.display = 'none';
+		}, 0)
+	});
+
+	item.addEventListener('dragend', function () {
+		setTimeout(function () {
+			draggedItem.style.display = 'block';
+			draggedItem = null;
+		}, 0);
+	})
+
+	for (let j = 0; j < lists.length; j ++) {
+		const list = lists[j];
+
+		list.addEventListener('dragover', function (e) {
+			e.preventDefault();
+		});
+
+		list.addEventListener('dragenter', function (e) {
+			e.preventDefault();
+			this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+		});
+
+		list.addEventListener('dragleave', function (e) {
+			this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+		});
+
+		list.addEventListener('drop', function (e) {
+			console.log('drop');
+			this.append(draggedItem);
+			this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+		});
+	}
+}
 
 
 
