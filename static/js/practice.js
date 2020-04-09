@@ -1,52 +1,73 @@
 //*****************Show all boards *************
 
+
+
 function displayBoards(boards){
-    for(board of boards){
-        const divBoard = document.createElement('div')
-        divBoard.classList.add('bigDiv' + `${board.id}`)
-        document.querySelector('.container').appendChild(divBoard);
 
+    boardList = ``;
 
-        const divRow = document.createElement('div');
-        divRow.classList.add(`row_${board.id}`, 'row', 'd-flex');
-        divBoard.appendChild(divRow);
+    for (board of boards){
+    bordTemplate =
+        `<div class="boardDiv_${board.id} mb-5">
+            <div class="boardHeader_${board.id} d-flex border mr-3 p-3 rounded">
+                <div id="boardTitle_${board.id} " class="mr-auto">
+                    ${board.title}
+                </div>
+                <div class="mr-2">
+                    <button id="addStatus_${board.id}"  class="btn btn-outline-dark btn-sm " type="button">+ Add Status</button>
+                </div>
+                <div>
+                    <button id="expandBoard_${board.id}" class="btn btn-outline-dark btn-sm" type="button">v</button>
+                </div>
+            </div>
+            <div class="container" style="display: none" id="container_${board.id}">
+                <div class="row" id="statusesContainer_${board.id}">
+                    
+                </div>
+            </div>
+        </div>
+        `
 
-        const divCol1 = document.createElement('div');
-        divCol1.classList.add('col-2');
-        divRow.appendChild(divCol1);
+        boardList += bordTemplate;
 
-        const nameBoard = document.createElement('h4');
-        nameBoard.setAttribute('id', `boardName_${board.id}`);
-        nameBoard.setAttribute('contenteditable', 'true');
-        nameBoard.textContent = `${board.title}`;
-        divCol1.appendChild(nameBoard);
+    };
+    let content = document.getElementById('content');
+    content.insertAdjacentHTML('beforeend', boardList);
 
-        const divCol2 = document.createElement('div');
-        divCol2.classList.add('col-sm');
-        divRow.appendChild(divCol2);
+    let buttons = document.getElementsByTagName('button')
+    for (button of buttons) {
+        if (button.id.slice(0, 12) === 'expandBoard_') {
+            let boardId = button.id.slice(12)
+            button.addEventListener('click', async function(){
+                let response = await fetch('/get-statuses/'+`${boardId}`);
+                response = await response.json();
+                let container = document.getElementById('container_'+`${boardId}`)
+                if(container.style.display ==='none') {
+                    container.style.display = 'block';
+                }else{
+                    container.style.display = 'none';
+                }
 
-        const addColumn = document.createElement('button');
-        addColumn.setAttribute('id', 'addColumn');
-        addColumn.classList.add('btn', 'btn-outline-dark');
-        addColumn.setAttribute('type', 'button');
-        addColumn.textContent = '+ New Column';
-        divCol2.appendChild(addColumn);
+                let expandBody = document.getElementById('statusesContainer_'+`${boardId}`);
+                expandBody.innerHTML = '';
 
-        const divCol3 = document.createElement('div');
-        divCol3.classList.add('dropdown', 'd-flex', 'v-auto', 'ml-auto');
-        divRow.appendChild(divCol3);
+                for (let status of response){
+                    // console.log(status);
+                    createAppend(status);
+                    let statusResponse = await fetch(`/get-cards/${boardId}/${status.status_id}`);
+                    statusResponse = await statusResponse.json();
+                    let statusBody = document.getElementById(`column_tr_${status.status_id}`);
+                    statusBody.innerHTML = '';
+                    statusBody.innerText = status.title;
+                    for (let card of statusResponse){
+                        console.log(card);
+                        createAppendCard(card);
+                    }
 
-        const buttonDropDown = document.createElement('button');
-        buttonDropDown.classList.add('btn', 'btn-outline-dark');
-        buttonDropDown.setAttribute('type', 'button');
-        buttonDropDown.setAttribute('onclick',"showStatuses("+`${board.id}`+")");
-        buttonDropDown.textContent = 'v';
-        divCol3.appendChild(buttonDropDown);
-        getStatuses(board.id)
-        getCards(board.id)
-
+                }
+            } )
+        }
     }
-
 }
 
 function getAllBoards() {
@@ -60,52 +81,101 @@ function getAllBoards() {
 }
 getAllBoards()
 
+function myFunction() {
+  var x = document.getElementById("myDIV");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
 
-//*************** Drop Down /---/ Statuses *************
-function createStatuses(statuses, boardId){
-    content = document.querySelector('.bigDiv' + boardId)
 
-    // divStatus = document.createElement('div');
-    // divStatus.classList.add('collapse', 'bordContent');
-    // divStatus.setAttribute('id', 'collapseBoard' + boardId)
-    // divStatus.textContent = 'buan ziua'
-    // content.append(divStatus)
-    outerHTML = `<div class="container" id="container_${boardId}" style="display: none;"><div class="row" id="collapseBoard_${boardId}"> </div></div>`;
-    content.insertAdjacentHTML('beforeend',outerHTML)
-    statusList = ``
-    for(currentStatus of statuses){
-        column = `<div class="col">${currentStatus.title}</div>`;
-        statusList += column;
+function createAppend(status) {
+
+    let boardBody = document.getElementById('statusesContainer_'+`${status.board_id}`)
+    // boardBody.setAttribute('class', 'd-flex', 'border', 'mr-3', 'p-3', 'rounded');
+    let column = document.createElement('div');
+    column.setAttribute('class', 'col');
+    // let column_tr = document.createElement('p');
+    // column.setAttribute('class', 'col-sm');
+    // column.setAttribute('style', 'margin:20px; border: 2px solid black; display: block');
+    column.setAttribute('style', 'text-align: center')
+    // column.setAttribute('style', 'display: table;')
+    column.setAttribute('id', `column_${status.status_id}`);
+    column.setAttribute('id', `column_tr_${status.status_id}`);
+    column.setAttribute('data-board', status.board_id);
+    column.innerText = `${status.title}`;
+    boardBody.appendChild(column);}
+
+
+function createAppendCard(status) {
+    let statusBody = document.getElementById(`column_tr_${status.status_id}`);
+    if (statusBody) {
+    let cardBody = document.createElement('div');
+    cardBody.setAttribute('class', 'col-md');
+    cardBody.setAttribute('style', ' border: 2px solid black; margin: 6px;');
+    cardBody.setAttribute('id', `card_${status.id}`);
+    cardBody.setAttribute('data-card', `${statusBody.id}`);
+    cardBody.setAttribute('data-board', statusBody.dataset.board);
+    cardBody.setAttribute('data-order', status.position);
+    cardBody.innerText += `${status.title}`;
+    statusBody.appendChild(cardBody);
     }
-    document.querySelector('#collapseBoard_'+ boardId).insertAdjacentHTML('beforeend',statusList)
-
 }
 
 
-function getStatuses(boardId){
-    fetch('/get-statuses')
-        .then ((response)=>{
-            return response.json();
-        })
-        .then((data) => {
-            createStatuses(data, boardId)
-        })
-}
-
-function showStatuses(boardId){
-    let div = document.querySelector('#container_'+boardId);
-    if (div.style.display === 'none'){
-        div.style.display = 'block'
-    } else{
-        div.style.display = 'none';
-    }
-}
 
 
-//*********************** --fetch and display cards-- ************
-
-function getCards(boardId){
 
 
-}
+
+
+// for(board of boards){
+    //     const divBoard = document.createElement('div')
+    //     divBoard.classList.add('bigDiv' + `${board.id}`)
+    //     document.querySelector('.container').appendChild(divBoard);
+    //
+    //
+    //     const divRow = document.createElement('div');
+    //     divRow.classList.add(`row_${board.id}`, 'row', 'd-flex');
+    //     divBoard.appendChild(divRow);
+    //
+    //     const divCol1 = document.createElement('div');
+    //     divCol1.classList.add('col-2');
+    //     divRow.appendChild(divCol1);
+    //
+    //     const nameBoard = document.createElement('h4');
+    //     nameBoard.setAttribute('id', `boardName_${board.id}`);
+    //     nameBoard.setAttribute('contenteditable', 'true');
+    //     nameBoard.textContent = `${board.title}`;
+    //     divCol1.appendChild(nameBoard);
+    //
+    //     const divCol2 = document.createElement('div');
+    //     divCol2.classList.add('col-sm');
+    //     divRow.appendChild(divCol2);
+    //
+    //     const addColumn = document.createElement('button');
+    //     addColumn.setAttribute('id', 'addColumn');
+    //     addColumn.classList.add('btn', 'btn-outline-dark');
+    //     addColumn.setAttribute('type', 'button');
+    //     addColumn.textContent = '+ New Column';
+    //     divCol2.appendChild(addColumn);
+    //
+    //     const divCol3 = document.createElement('div');
+    //     divCol3.classList.add('dropdown', 'd-flex', 'v-auto', 'ml-auto');
+    //     divRow.appendChild(divCol3);
+    //
+    //     const buttonDropDown = document.createElement('button');
+    //     buttonDropDown.classList.add('btn', 'btn-outline-dark');
+    //     buttonDropDown.setAttribute('type', 'button');
+    //     buttonDropDown.setAttribute('onclick',"showStatuses("+`${board.id}`+")");
+    //     buttonDropDown.textContent = 'v';
+    //     divCol3.appendChild(buttonDropDown);
+    //
+    //
+    //
+
+
+
 

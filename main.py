@@ -9,34 +9,28 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    """
-    This is a one-pager which shows all the boards and cards
-    """
-
     return render_template('index.html')
 
 
 @app.route("/get-boards")
 @json_response
 def get_boards():
-    """
-    All the boards
-    """
     return queries.get_boards()
 
 
-@app.route("/get-cards/<board_id>")
+@app.route('/get-statuses/<board_id>')
 @json_response
-def get_cards_for_board(board_id):
-    return queries.get_cards_for_bords(board_id)
+def get_statuses_for_board(board_id):
+    return queries.get_statuses(board_id)
 
 
-
-@app.route('/get-statuses')
+@app.route("/get-cards/<board_id>/<status_id>")
 @json_response
-def get_statuses_for_board():
+def get_cards_for_board(board_id, status_id):
+    return queries.get_cards_for_bords(board_id,status_id)
 
-    return queries.get_statuses()
+
+
 
 
 def main():
