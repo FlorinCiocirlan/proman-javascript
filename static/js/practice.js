@@ -95,7 +95,14 @@ function createAppend(status) {
     let boardBody = document.getElementById('statusesContainer_'+`${status.board_id}`)
     boardBody.setAttribute('class', 'd-flex mr-3 p-3 rounded');
     let column = document.createElement('div');
+<<<<<<< HEAD
     column.setAttribute('class', 'col m-1 bg-white listcard');
+=======
+    column.setAttribute('class', 'col m-1 bg-white card_list');
+    // let column_tr = document.createElement('p');
+    // column.setAttribute('class', 'col-sm');
+    // column.setAttribute('style', 'margin:20px; border: 2px solid black; display: block');
+>>>>>>> f876dca2c9bc5b05e5046d6ac6a0b3a355ef9ac8
     column.setAttribute('style', 'text-align: center')
     column.setAttribute('id', `column_tr_${status.status_id}_${status.board_id}`);
     column.setAttribute('data-board', status.board_id);
@@ -107,7 +114,12 @@ function createAppendCard(status) {
     let statusBody = document.getElementById(`column_tr_${status.status_id}_${status.board_id}`);
     if (statusBody) {
     let cardBody = document.createElement('div');
+<<<<<<< HEAD
     cardBody.setAttribute('class', 'col-md card');
+=======
+    cardBody.setAttribute('class' , 'col-md card');
+    cardBody.setAttribute('draggable',true)
+>>>>>>> f876dca2c9bc5b05e5046d6ac6a0b3a355ef9ac8
     cardBody.setAttribute('style', ' border: 1px solid black; margin: 3px;');
     cardBody.setAttribute('draggable', true);
     cardBody.setAttribute('id', `card_${status.id}`);
@@ -119,8 +131,13 @@ function createAppendCard(status) {
     }
 }
 
+<<<<<<< HEAD
 const list_items = document.querySelectorAll('.card');
 const lists = document.querySelectorAll('.listcard');
+=======
+const list_items = document.querySelectorAll('.card);
+const lists = document.querySelectorAll('.card_list');
+>>>>>>> f876dca2c9bc5b05e5046d6ac6a0b3a355ef9ac8
 
 let draggedItem = null;
 
@@ -128,6 +145,10 @@ for (let i = 0; i < list_items.length; i++) {
 	const item = list_items[i];
 
 	item.addEventListener('dragstart', function () {
+<<<<<<< HEAD
+=======
+	    console.log('dragstart')
+>>>>>>> f876dca2c9bc5b05e5046d6ac6a0b3a355ef9ac8
 		draggedItem = item;
 		setTimeout(function () {
 			item.style.display = 'none';
