@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+    <div>
+        <div class="mr-auto ml-auto" style="padding-top: 100px">
+            <form  action="{{ url_for('login') }}" method="post" class="bg-light mr-auto ml-auto w-25 d-flex flex-column text-center p-2">
+                <p>Login</p>
+                <label>Username</label>
+                <input type="text" placeholder="username" required name="username" class="align-self-center w-75">
+                <label>Password</label>
+                <input type="password" placeholder="password" required name="password" class="align-self-center w-75">
+                <input type="submit" value="Login" class="w-50 align-self-center mt-3">
+            </form>
+        </div>
+    </div>
+
+
+
+{% endblock %}

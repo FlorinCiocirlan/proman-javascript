@@ -1,11 +1,11 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect,session
 from util import json_response
 import queries
-
+import hashing
 import data_handler
 
 app = Flask(__name__)
-
+app.secret_key = 'ALJDBIYVIG'
 
 @app.route("/")
 def index():
@@ -49,6 +49,43 @@ def update_title_name(board_id):
     newTitle = request.json['newTitle']
     queries.update_title_board(board_id, newTitle)
     return render_template('index.html')
+
+@app.route('/register', methods=['GET','POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
+        username = request.form['username']
+        password = hashing.hash_password(request.form['password'])
+        queries.insert_user(username,password)
+        return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        inserted_password = request.form['password']
+        inserted_username = request.form['username']
+        table_password = queries.get_password(inserted_username)
+        if table_password:
+            if hashing.verify_password(inserted_password,table_password):
+                session['username'] = inserted_username
+                return redirect(url_for('index'))
+            else:
+                return redirect(url_for('login'))
+        else:
+            return redirect(url_for('login'))
+
+
+@app.route('/logout')
+def logout():
+     session.pop('username')
+     return redirect(url_for('index'))
+
+
+
+
 
 
 

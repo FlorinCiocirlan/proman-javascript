@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+
+<div class="mr-auto ml-auto" style="padding-top: 100px">
+    <form method="post" action="{{ url_for('register') }}" class="bg-light mr-auto ml-auto w-25 d-flex flex-column text-center p-2">
+        <p>Register</p>
+        <label>Username</label>
+        <input type="text" placeholder="username" name="username" required class="align-self-center w-75">
+        <label>Password</label>
+        <input type="password" placeholder="password" name="password" required class="align-self-center w-75" onchange="if(this.checkValidity()) form.confirm.pattern = this.value;">
+        <label> Confirm Password</label>
+        <input type="password" placeholder="password" name="password" required class="align-self-center w-75"  onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please enter the same Password as above' : '');">
+        <input type="submit" value="Submit" class="w-50 align-self-center mt-3"
+</div>
+
+
+
+
+
+
+{% endblock %}

@@ -39,3 +39,29 @@ def update_title_board(board_id, new_title):
         connection.execute_select(query)
     except:
         return True
+
+def insert_user(username, password):
+    try :
+        ids = connection.execute_select('SELECT id FROM users ')
+        id_list =[x['id'] for x in ids]
+        if len(id_list) < 1:
+            user_id = 1
+        else:
+            user_id =max(id_list) + 1
+        query = "INSERT INTO users VALUES('{user_id}','{username}', '{password}')".format(user_id = user_id, username = username, password =password)
+        connection.execute_select(query)
+    except:
+        print('wtf')
+
+def get_password(username):
+    query = "SELECT password FROM users WHERE username = '{user}'".format(user=username)
+
+    password = connection.execute_select(query)
+    if password:
+        return password[0]['password']
+    else:
+        return False
+
+def get_userid(username):
+    return connection.execute_select("SELECT id FROM users WHERE username = '{user}'".format(user=username))[0]
+

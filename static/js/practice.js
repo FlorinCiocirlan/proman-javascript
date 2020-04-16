@@ -81,19 +81,19 @@ function displayBoards(boards){
             let boardId = button.id.slice(12)
             // console.log(boardId);
             let deleteButtonBoard = document.getElementById(`delete_${boardId}`).addEventListener('click', deleteBoard);
-            button.addEventListener('click', async function(){
-                let response = await fetch('/get-statuses/'+`${boardId}`);
+            button.addEventListener('click', async function() {
+                let response = await fetch('/get-statuses/' + `${boardId}`);
                 response = await response.json();
-                let container = document.getElementById('container_'+`${boardId}`)
-                if(container.style.display ==='none') {
+                let container = document.getElementById('container_' + `${boardId}`)
+                if (container.style.display === 'none') {
                     container.style.display = 'block';
-                }else{
+                } else {
                     container.style.display = 'none';
                 }
-                let expandBody = document.getElementById('statusesContainer_'+`${boardId}`);
+                let expandBody = document.getElementById('statusesContainer_' + `${boardId}`);
                 expandBody.innerHTML = '';
 
-                for (let status of response){
+                for (let status of response) {
                     // console.log(status);
                     createStatus(status);
                     let statusResponse = await fetch(`/get-cards/${boardId}/${status.status_id}`);
@@ -101,16 +101,17 @@ function displayBoards(boards){
                     let statusBody = document.getElementById(`column_tr_${status.status_id}_${status.board_id}`);
                     statusBody.innerHTML = '';
                     statusBody.innerText = status.title;
-                    for (let card of statusResponse){
+                    for (let card of statusResponse) {
                         console.log(card);
                         createCard(card);
                     }
 
                 }
-            } )
+            })
         }
     }
 }
+
 
 function getAllBoards() {
     fetch('/get-boards')
@@ -158,136 +159,89 @@ function createCard(status) {
 }
 
 
-const list_items = document.querySelectorAll('.card);
+const list_items = document.querySelectorAll('.card');
 const lists = document.querySelectorAll('.card_list');
 
 
 let draggedItem = null;
 
 for (let i = 0; i < list_items.length; i++) {
-	const item = list_items[i];
+    const item = list_items[i];
 
-	item.addEventListener('dragstart', function () {
+    item.addEventListener('dragstart', function () {
 
-		draggedItem = item;
-		setTimeout(function () {
-			item.style.display = 'none';
-		}, 0)
-	});
+        draggedItem = item;
+        setTimeout(function () {
+            item.style.display = 'none';
+        }, 0)
+    });
 
-	item.addEventListener('dragend', function () {
-		setTimeout(function () {
-			draggedItem.style.display = 'block';
-			draggedItem = null;
-		}, 0);
-	})
+    item.addEventListener('dragend', function () {
+        setTimeout(function () {
+            draggedItem.style.display = 'block';
+            draggedItem = null;
+        }, 0);
+    })
 
-	for (let j = 0; j < lists.length; j ++) {
-		const list = lists[j];
+    for (let j = 0; j < lists.length; j++) {
+        const list = lists[j];
 
-		list.addEventListener('dragover', function (e) {
-			e.preventDefault();
-		});
+        list.addEventListener('dragover', function (e) {
+            e.preventDefault();
+        });
 
-		list.addEventListener('dragenter', function (e) {
-			e.preventDefault();
-			this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-		});
+        list.addEventListener('dragenter', function (e) {
+            e.preventDefault();
+            this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+        });
 
-		list.addEventListener('dragleave', function (e) {
-			this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-		});
+        list.addEventListener('dragleave', function (e) {
+            this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+        });
 
-		list.addEventListener('drop', function (e) {
-			console.log('drop');
-			this.append(draggedItem);
-			this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-		});
-	}
+        list.addEventListener('drop', function (e) {
+            console.log('drop');
+            this.append(draggedItem);
+            this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+        });
+    }
 
 
-function addNewBoard(lengthOfBoards){
+    function addNewBoard(lengthOfBoards) {
 
-    board_title = 'New Board('+ (parseInt(`${lengthOfBoards}`) + 1) + ')';
-    if (board_title !== null ){
+        board_title = 'New Board(' + (parseInt(`${lengthOfBoards}`) + 1) + ')';
+        if (board_title !== null) {
+            settings = {
+                'method': 'POST',
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(board_title)
+            }
+            fetch('/add-new-board', settings)
+            location.reload();
+        }
+
+
+    }
+
+
+    function deleteBoard() {
+        board_id = this.id.slice(7);
+        console.log(board_id)
         settings = {
             'method': 'POST',
             'headers': {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify(board_title)
+            body: JSON.stringify(board_id)
         }
-        fetch('/add-new-board', settings)
-           location.reload();
-    }
-
-
-}
-
-
-function deleteBoard() {
-    board_id = this.id.slice(7);
-    console.log(board_id)
-    settings = {
-        'method': 'POST',
-        'headers': {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(board_id)
-    }
-    fetch(`/delete-board/${board_id}`, settings)
+        fetch(`/delete-board/${board_id}`, settings)
         location.reload();
+    }
 }
-
-
-
-
-// for(board of boards){
-    //     const divBoard = document.createElement('div')
-    //     divBoard.classList.add('bigDiv' + `${board.id}`)
-    //     document.querySelector('.container').appendChild(divBoard);
-    //
-    //
-    //     const divRow = document.createElement('div');
-    //     divRow.classList.add(`row_${board.id}`, 'row', 'd-flex');
-    //     divBoard.appendChild(divRow);
-    //
-    //     const divCol1 = document.createElement('div');
-    //     divCol1.classList.add('col-2');
-    //     divRow.appendChild(divCol1);
-    //
-    //     const nameBoard = document.createElement('h4');
-    //     nameBoard.setAttribute('id', `boardName_${board.id}`);
-    //     nameBoard.setAttribute('contenteditable', 'true');
-    //     nameBoard.textContent = `${board.title}`;
-    //     divCol1.appendChild(nameBoard);
-    //
-    //     const divCol2 = document.createElement('div');
-    //     divCol2.classList.add('col-sm');
-    //     divRow.appendChild(divCol2);
-    //
-    //     const addColumn = document.createElement('button');
-    //     addColumn.setAttribute('id', 'addColumn');
-    //     addColumn.classList.add('btn', 'btn-outline-dark');
-    //     addColumn.setAttribute('type', 'button');
-    //     addColumn.textContent = '+ New Column';
-    //     divCol2.appendChild(addColumn);
-    //
-    //     const divCol3 = document.createElement('div');
-    //     divCol3.classList.add('dropdown', 'd-flex', 'v-auto', 'ml-auto');
-    //     divRow.appendChild(divCol3);
-    //
-    //     const buttonDropDown = document.createElement('button');
-    //     buttonDropDown.classList.add('btn', 'btn-outline-dark');
-    //     buttonDropDown.setAttribute('type', 'button');
-    //     buttonDropDown.setAttribute('onclick',"showStatuses("+`${board.id}`+")");
-    //     buttonDropDown.textContent = 'v';
-    //     divCol3.appendChild(buttonDropDown);
-    //
-    //
-    //
 
 
 
